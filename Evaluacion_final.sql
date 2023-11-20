@@ -57,17 +57,18 @@ SELECT `rating`, COUNT(*) AS `recuento`
 -- 10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, su nombre y apellido junto con la cantidad de películas alquiladas.
 
 SELECT `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`, COUNT(`r`.`rental_id`) AS `cantidad_total_alquileres` 
-	FROM `customer` c INNER JOIN `rental` r
-	ON `c`.`customer_id` = `r`.`customer_id` 
-	GROUP BY `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`;
+	FROM `customer` c 
+		INNER JOIN `rental` ON `c`.`customer_id` = `r`.`customer_id` 
+		GROUP BY `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`;
 
 -- 11.Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
 
 SELECT `c`.`name` AS `nombre_categoria`, COUNT(`r`.`rental_id`) AS `cantidad_total_alquileres`
-	FROM `category` c INNER JOIN `film_category` fc ON `c`.`category_id` = `fc`.`category_id`
-					  INNER JOIN `film` f ON `fc`.`film_id` = `f`.`film_id`
-					  INNER JOIN `inventory` i ON `f`.`film_id` = `i`.`film_id`
-                      INNER JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
+	FROM `category` c 
+		INNER JOIN `film_category` fc ON `c`.`category_id` = `fc`.`category_id`
+		INNER JOIN `film` f ON `fc`.`film_id` = `f`.`film_id`
+		INNER JOIN `inventory` i ON `f`.`film_id` = `i`.`film_id`
+		INNER JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
 	GROUP BY `c`.`name`;
 
 -- 12. Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra la clasificación junto con el promedio de duración.
@@ -79,9 +80,10 @@ SELECT `rating`, AVG(`length`) AS `promedio_duracion_pelis`
 -- 13. Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
 
 SELECT `a`.`first_name`, `a`.`last_name` 
-	FROM `actor` a INNER JOIN `film_actor` fa ON `a`.`actor_id` = `fa`.`actor_id` 
-				   INNER JOIN `film` f ON `fa`.`film_id` = `f`.`film_id` 
-	WHERE `f`.`title` = 'Indian Love';
+	FROM `actor` a 
+		INNER JOIN `film_actor` fa ON `a`.`actor_id` = `fa`.`actor_id` 
+		INNER JOIN `film` f ON `fa`.`film_id` = `f`.`film_id` 
+		WHERE `f`.`title` = 'Indian Love';
 
 -- 14. Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción.
 
@@ -98,20 +100,22 @@ SELECT `a`.`first_name`, `a`.`last_name`
 -- 16. Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010. 
 
 SELECT `title`, `release_year` 
-		FROM `film` 
-		WHERE `release_year` BETWEEN 2005 AND 2010;
+    FROM `film` 
+    WHERE `release_year` BETWEEN 2005 AND 2010;
     
--- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family" 
+-- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family"  ⚠️⚠️⚠️
 
 SELECT `f`.`title`
-	FROM `film` f JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
-				  JOIN `category` c ON `fc`.`category_id` = `c`.`category_id` 		
-	WHERE `c`.`name` = 'Family';
+	FROM `film` f 
+		INNER JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
+		INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id` 		
+		WHERE `c`.`name` = 'Family';
     
 -- 18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas. 
 
 SELECT `a`.`first_name`, `a`.`last_name`
-	FROM `actor` a JOIN `film_actor` fa ON `a`.`actor_id` = `fa`.`actor_id` 
+	FROM `actor` a 
+    INNER JOIN `film_actor` fa ON `a`.`actor_id` = `fa`.`actor_id` 
 	GROUP BY `a`.`actor_id` 
 	HAVING COUNT(fa.film_id) > 10;
     
@@ -124,8 +128,9 @@ SELECT `a`.`first_name`, `a`.`last_name`
 -- 20.  Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.
 
 SELECT `c`.`name` AS `nombre_categoria`, AVG(`f`.`length`) AS `promedio_duracion` 
-	FROM `category` c INNER JOIN `film_category` fc ON `c`.`category_id` = `fc`.`category_id` 
-					  INNER JOIN `film` f ON `fc`.`film_id` = `f`.`film_id`
+FROM `category` c 
+    INNER JOIN `film_category` fc ON `c`.`category_id` = `fc`.`category_id` 
+	INNER JOIN `film` f ON `fc`.`film_id` = `f`.`film_id`
 	GROUP BY `c`.`name` 
 	HAVING AVG(`f`.`length`) > 120;
 
@@ -141,30 +146,37 @@ SELECT `a`.`first_name`, `a`.`last_name`, COUNT(`fa`.`film_id`) AS `cantidad_pel
 SELECT `title`
 	FROM `film` 
     WHERE `film_id` IN (SELECT `f`.`film_id`
-							FROM `film` f
-								INNER JOIN `inventory` i ON `f`.`film_id` = `i.film_id`
-								INNER JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
-							WHERE `r`.`duracion` > 5);
+			FROM `film` f
+			INNER JOIN `inventory` i ON `f`.`film_id` = `i.film_id`
+			INNER JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
+			WHERE `r`.`duracion` > 5);
 
 -- 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego excluyelos de la lista de actores.
 
 SELECT `first_name`, `last_name`
 	FROM `actor`
 	WHERE `actor_id` NOT IN (SELECT DISTINCT `fa`.`actor_id`
-								FROM `film_actor` fa
-									INNER JOIN `film_category` fc ON `fa`.`film_id` = `fc`.`film_id`
-									INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
-								WHERE `c`.`name` = 'Horror');
+			FROM `film_actor` fa
+			INNER JOIN `film_category` fc ON `fa`.`film_id` = `fc`.`film_id`
+			INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
+			WHERE `c`.`name` = 'Horror');
                                 
 -- 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.
 
 SELECT `f`.`title`
 	FROM `film` f
-		INNER JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
-		INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
+	INNER JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
+	INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
 	WHERE `c`.`name` = 'Comedy' AND `f`.`length` > 180;  
     
     
 -- 25. BONUS: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe mostrar el nombre y apellido de los actores y el número de películas en las que han actuado juntos.
 
--- (Estoy en ello xD)    
+SELECT `a1`.`first_name` AS `actor1_nombre`, `a1`.`last_name` AS `actor1_apellido`,
+       `a2`.`first_name` AS `actor2_nombre`, `a2`.`last_name` AS `actor2_apellido`,
+       COUNT(*) AS `peliculas_juntos`
+	FROM `film_actor` fa1
+		INNER JOIN `film_actor` fa2 ON `fa1`.`film_id` = `fa2`.`film_id` AND `fa1`.`actor_id` < `fa2`.`actor_id`
+		INNER JOIN `actor` a1 ON `fa1`.`actor_id` = `a1`.`actor_id`
+		INNER JOIN `actor` a2 ON `fa2`.`actor_id` = `a2`.`actor_id`
+		GROUP BY `a1`.`actor_id`, `a2`.`actor_id`; 
