@@ -57,9 +57,9 @@ SELECT `rating`, COUNT(*) AS `recuento`
 -- 10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, su nombre y apellido junto con la cantidad de películas alquiladas.
 
 SELECT `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`, COUNT(`r`.`rental_id`) AS `cantidad_total_alquileres` 
-FROM `customer` c INNER JOIN `rental` r
-ON `c`.`customer_id` = `r`.`customer_id` 
-GROUP BY `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`;
+	FROM `customer` c INNER JOIN `rental` r
+	ON `c`.`customer_id` = `r`.`customer_id` 
+	GROUP BY `c`.`customer_id`, `c`.`first_name`, `c`.`last_name`;
 
 -- 11.Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría junto con el recuento de alquileres.
 
@@ -97,9 +97,9 @@ SELECT `a`.`first_name`, `a`.`last_name`
 
 -- 16. Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010. 
 
-    SELECT `title`, `release_year` 
-    FROM `film` 
-    WHERE `release_year` BETWEEN 2005 AND 2010;
+SELECT `title`, `release_year` 
+		FROM `film` 
+		WHERE `release_year` BETWEEN 2005 AND 2010;
     
 -- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family"  ⚠️⚠️⚠️
 
