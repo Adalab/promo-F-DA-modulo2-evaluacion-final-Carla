@@ -142,8 +142,8 @@ SELECT `title`
 	FROM `film` 
     WHERE `film_id` IN (SELECT `f`.`film_id`
 							FROM `film` f
-								JOIN `inventory` i ON `f`.`film_id` = `i.film_id`
-								JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
+								INNER JOIN `inventory` i ON `f`.`film_id` = `i.film_id`
+								INNER JOIN `rental` r ON `i`.`inventory_id` = `r`.`inventory_id`
 							WHERE `r`.`duracion` > 5);
 
 -- 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego excluyelos de la lista de actores.
@@ -152,16 +152,16 @@ SELECT `first_name`, `last_name`
 	FROM `actor`
 	WHERE `actor_id` NOT IN (SELECT DISTINCT `fa`.`actor_id`
 								FROM `film_actor` fa
-									JOIN `film_category` fc ON `fa`.`film_id` = `fc`.`film_id`
-									JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
+									INNER JOIN `film_category` fc ON `fa`.`film_id` = `fc`.`film_id`
+									INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
 								WHERE `c`.`name` = 'Horror');
                                 
 -- 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.
 
 SELECT `f`.`title`
 	FROM `film` f
-		JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
-		JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
+		INNER JOIN `film_category` fc ON `f`.`film_id` = `fc`.`film_id`
+		INNER JOIN `category` c ON `fc`.`category_id` = `c`.`category_id`
 	WHERE `c`.`name` = 'Comedy' AND `f`.`length` > 180;  
     
     
