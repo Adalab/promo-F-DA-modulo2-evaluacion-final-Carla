@@ -103,7 +103,7 @@ SELECT `title`, `release_year`
     FROM `film` 
     WHERE `release_year` BETWEEN 2005 AND 2010;
     
--- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family"  ⚠️⚠️⚠️
+-- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family"  
 
 SELECT `f`.`title`
 	FROM `film` f 
